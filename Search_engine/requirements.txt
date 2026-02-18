@@ -7,3 +7,4 @@ dotenv
 streamlit 
 langchain_groq
 ddgs
+arxiv
