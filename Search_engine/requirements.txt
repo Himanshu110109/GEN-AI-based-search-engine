@@ -1,0 +1,9 @@
+langchain
+langchain_classic
+langchain_community
+langchain_core
+wikipedia
+dotenv
+streamlit 
+langchain_groq
+ddgs
