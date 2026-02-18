@@ -20,24 +20,25 @@ st.title("Langchain - Chat With Search")
 st.sidebar.title("settings")
 api_key = st.sidebar.text_input("Enter your groq api key:", type="password")
 
-if "messages" not in st.session_state:
-    st.session_state["messages"] = [
-        {"role": "assistant", "content": "hey there"}
-    ]
-
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
-
-if prompt:=st.chat_input(placeholder="what is machine learning?"):
-    st.session_state.messages.append({"role": "user", "content":prompt})
-    st.chat_message("user").write(prompt)
-
-    llm = ChatGroq(groq_api_key=api_key, model_name="llama-3.1-8b-instant", streaming=True)
-    tools = [arxiv, search, wikipedia]
-    search_agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, handling_parsing_errors=True) ## agent types are just used to define that with which type the agent will manage the history and the memory
-
-    with st.chat_message("assistant"):
-        st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False) ## it's a callback handler which will just show agent updates and thoughts in the container everytime
-        response = search_agent.run(st.session_state.messages, callbacks=[st_cb])
-        st.session_state.messages.append({"role":"assistant", "content":response})
-        st.write(response)
+if api_key:
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = [
+            {"role": "assistant", "content": "hey there"}
+        ]
+    
+    for msg in st.session_state.messages:
+        st.chat_message(msg["role"]).write(msg["content"])
+    
+    if prompt:=st.chat_input(placeholder="what is machine learning?"):
+        st.session_state.messages.append({"role": "user", "content":prompt})
+        st.chat_message("user").write(prompt)
+    
+        llm = ChatGroq(groq_api_key=api_key, model_name="llama-3.1-8b-instant", streaming=True)
+        tools = [arxiv, search, wikipedia]
+        search_agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, handling_parsing_errors=True) ## agent types are just used to define that with which type the agent will manage the history and the memory
+    
+        with st.chat_message("assistant"):
+            st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False) ## it's a callback handler which will just show agent updates and thoughts in the container everytime
+            response = search_agent.run(st.session_state.messages, callbacks=[st_cb])
+            st.session_state.messages.append({"role":"assistant", "content":response})
+            st.write(response)
