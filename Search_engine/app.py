@@ -40,5 +40,6 @@ if api_key:
         with st.chat_message("assistant"):
             st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False) ## it's a callback handler which will just show agent updates and thoughts in the container everytime
             response = search_agent.run(st.session_state.messages, callbacks=[st_cb])
+            print("response generated")
             st.session_state.messages.append({"role":"assistant", "content":response})
             st.write(response)
